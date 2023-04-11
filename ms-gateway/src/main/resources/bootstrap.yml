@@ -1,0 +1,26 @@
+server:
+  port: 10001
+
+spring:
+  application:
+    name: ms-gateway
+  cloud:
+    nacos:
+      config:
+        server-addr: ${nacos-server:dev-nacos:8848}
+        file-extension: yml
+        group:${config-group: MS_GROUP_DEV}
+      discovery:
+        server-addr: ${nacos-server:dev-nacos:8848}
+        ip: ${discovery-ip:${spring.cloud.client.ip-address}}
+  main:
+    #允许重名配置
+    allow-bean-definition-overriding: true
+#    日志存储服务器地址
+logging:
+  file:
+    path: "./log/base/gateway"
+  level:
+    com:
+      alibaba:
+        nacos: error

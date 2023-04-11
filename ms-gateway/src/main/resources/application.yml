@@ -1,0 +1,65 @@
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 300MB #限制文件上传的大小
+      max-request-size: 500MB
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    timeout: 10000
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: 10000
+        max-idle: 8
+        min-idle: 0
+      shutdown-timeout: 100
+  cloud:
+    gateway:
+      enabled: true
+      routes:
+        - id: auth
+          uri: lb://ms_auth
+          predicates:
+            - Path=/ms/auth/**
+          filters:
+            - StripPrefix=2
+
+
+
+base:
+  security:
+#    忽略认证，白名单
+    ignore:
+      httpUrls: >
+        /ms/auth/oauth/**,
+        /ms/auth/login/**
+    auth:
+      urlPermission:
+        #是否开启url级别权限
+        enable: false
+        #配置只进行登录认证，不进行url权限认证的api
+        #/api/uas/corp-user/change，远程调用删除企业用户
+        #/api/anyfix/work-cost/queryByMobile，远程调用获得工程师需要报销的工单
+        #/api/anyfix/atm-appraise-engineer/queryByMonth，远程调用获得工程师需要考核的工单
+        ignoreUrls: >
+          /api/wms/**,
+          /api/anyfix/zj/**
+
+logging:
+  level:
+    com.ailen: debug
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+
+      
